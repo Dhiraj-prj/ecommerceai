@@ -1,9 +1,9 @@
-echo fastapi==0.104.1>requirements.txt
-echo uvicorn[standard]==0.24.0>>requirements.txt
-echo gunicorn==21.2.0>>requirements.txt
-echo sqlalchemy==2.0.23>>requirements.txt
-echo python-multipart==0.0.6>>requirements.txt
-echo jinja2==3.1.2>>requirements.txt
-echo scikit-learn==1.2.2>>requirements.txt
-echo pandas==1.5.3>>requirements.txt
-echo numpy==1.24.3>>requirements.txt
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+gunicorn==21.2.0
+sqlalchemy==2.0.23
+python-multipart==0.0.6
+jinja2==3.1.2
+scikit-learn==1.2.2
+pandas==1.5.3
+numpy==1.24.3

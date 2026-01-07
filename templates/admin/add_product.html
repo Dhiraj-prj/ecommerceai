@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Product</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h2>➕ Add New Product</h2>
+                
+                <form method="POST" action="/admin/add">
+                    <div class="mb-3">
+                        <label class="form-label">Product Name</label>
+                        <input type="text" name="name" class="form-control" required 
+                               placeholder="Wireless Headphones Pro">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Price ($)</label>
+                        <input type="number" name="price" step="0.01" class="form-control" required 
+                               placeholder="99.99">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-control" rows="3" 
+                                  placeholder="High quality wireless headphones..."></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <strong>🔥 Product Context (CRITICAL for AI!)</strong>
+                        </label>
+                        <p class="text-muted small">
+                            Enter ALL relevant keywords: categories, features, use cases. 
+                            Example: "wireless bluetooth headphones gym bass sports running fitness audio"
+                        </p>
+                        <textarea name="productcontext" class="form-control" rows="4" required 
+                                  placeholder="wireless bluetooth headphones gym bass sports running fitness audio"></textarea>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Stock</label>
+                            <input type="number" name="stock" class="form-control" value="10">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Active</label>
+                            <input type="checkbox" name="isactive" value="true">
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success btn-lg">🚀 Create Product</button>
+                    <a href="/admin/" class="btn btn-secondary">← Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

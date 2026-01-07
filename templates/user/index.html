@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Recommendations Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">🛒 AI Store</a>
+            <form class="d-flex me-auto" action="/search" method="GET">
+                <input class="form-control me-2" type="search" name="q" placeholder="Search products..." required>
+                <button class="btn btn-outline-light" type="submit">Search</button>
+            </form>
+            <div class="d-flex">
+                
+                <a class="btn btn-outline-light" href="/admin/">Admin</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <!-- 🔥 RECOMMENDATIONS SECTION -->
+        <div class="row mb-5">
+            <div class="col">
+                <h1>🎯 <span id="rec-loading">Loading your recommendations...</span></h1>
+                <p class="lead" id="rec-subtitle">AI is analyzing your behavior history...</p>
+            </div>
+        </div>
+
+        <div class="recommendations-section mb-5" id="recommendations" style="display: none;">
+            <h2>🥇 Personalized Recommendations</h2>
+            <div class="row" id="rec-products">
+                <!-- Recommendations loaded via JS -->
+            </div>
+        </div>
+
+        <!-- All Products -->
+        <h2 class="mb-4">🛍️ All Products</h2>
+        <div class="row">
+            {% for product in products %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">{{ product.description[:100] }}...</p>
+                        <p class="text-danger fw-bold fs-4">${{"%.2f"|format(product.price)}}</p>
+                        <a href="/product/{{ product.id }}" class="btn btn-primary w-100">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if not products %}
+        <div class="text-center py-5">
+            <h3>No products available</h3>
+            <p><a href="/admin/add" class="btn btn-primary">Add products in Admin →</a></p>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // 🔥 Load personalized recommendations
+        fetch('/api/recommendations?user_id=demo_user_1&top_n=4')
+            .then(response => response.json())
+            .then(recommendations => {
+                const recSection = document.getElementById('recommendations');
+                const recProducts = document.getElementById('rec-products');
+                const loading = document.getElementById('rec-loading');
+                const subtitle = document.getElementById('rec-subtitle');
+                
+                if (recommendations.length === 0) {
+                    loading.textContent = 'No recommendations yet';
+                    subtitle.textContent = 'Browse products or search to get personalized suggestions!';
+                    return;
+                }
+                
+                loading.textContent = `Found ${recommendations.length} recommendations for you!`;
+                subtitle.textContent = 'Based on your browsing and search history';
+                recSection.style.display = 'block';
+                
+                recommendations.forEach(rec => {
+                    recProducts.innerHTML += `
+                        <div class="col-md-3 mb-4">
+                            <div class="card border-primary shadow h-100">
+                                <div class="card-body">
+                                    <h6 class="card-title">${rec.name}</h6>
+                                    <p class="text-danger fw-bold">$${rec.price.toFixed(2)}</p>
+                                    <div class="mb-2">
+                                        <span class="badge bg-success fs-6">${rec.match_percentage}% Match</span>
+                                    </div>
+                                    <small class="text-muted">${rec.explanation}</small>
+                                    <a href="/product/${rec.product_id}" class="btn btn-primary btn-sm w-100 mt-2">View Product</a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            })
+            .catch(error => {
+                console.error('Recommendations error:', error);
+                document.getElementById('rec-loading').textContent = 'Error loading recommendations';
+            });
+    </script>
+</body>
+</html>

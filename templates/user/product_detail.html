@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ product.name }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">🛒 AI Store</a>
+            <a class="btn btn-outline-light" href="/">← Back to Store</a>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-8">
+                <h1>{{ product.name }}</h1>
+                <h2 class="text-danger">${{"%.2f"|format(product.price)}}</h2>
+                
+                <div class="mb-4">
+                    <h5>Description:</h5>
+                    <p>{{ product.description or "No description available." }}</p>
+                </div>
+                
+                <div class="mb-4">
+                    <h5>AI Context:</h5>
+                    <code class="bg-light p-3 d-block small">{{ product.productcontext }}</code>
+                </div>
+                
+                <div class="alert alert-info">
+                    ✅ Your <strong>VIEW</strong> has been tracked for recommendations!
+                </div>
+                
+                <a href="/" class="btn btn-primary">← Continue Shopping</a>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h6>Quick Stats</h6>
+                        <ul class="list-unstyled">
+                            <li><strong>ID:</strong> {{ product.id }}</li>
+                            <li><strong>Stock:</strong> 
+                                <span class="badge {{ 'bg-success' if product.stock > 0 else 'bg-danger' }}">
+                                    {{ product.stock }}
+                                </span>
+                            </li>
+                            <li><strong>Status:</strong> 
+                                {% if product.isactive %}
+                                    <span class="badge bg-success">Active</span>
+                                {% else %}
+                                    <span class="badge bg-warning">Inactive</span>
+                                {% endif %}
+                            </li>
+                        </ul>
+                        
+                        <hr>
+                        <p><em>User ID used for tracking: {{ user_id }}</em></p>
+                        <a href="/search?q={{ product.name }}" class="btn btn-outline-secondary btn-sm">Search Similar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

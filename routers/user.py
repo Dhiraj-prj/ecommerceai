@@ -20,14 +20,11 @@ async def store_home(request: Request, db: Session = Depends(get_db)):
 
 @router.get("/product/{product_id}", response_class=HTMLResponse)
 async def product_detail(
-    request: Request,  # ← THIS WAS MISSING!
+    request: Request,
     product_id: int,
     user_id: str = "demo_user_1",
     db: Session = Depends(get_db)
 ):
-    """Product detail page - TRACKS VIEW BEHAVIOR"""
-    
-    # TRACK VIEW BEHAVIOR
     behavior = UserBehaviorCreate(
         userid=user_id,
         productid=product_id,
@@ -40,21 +37,18 @@ async def product_detail(
         return HTMLResponse("Product not found", status_code=404)
     
     return templates.TemplateResponse("user/product_detail.html", {
-        "request": request,  # ← THIS WAS MISSING!
+        "request": request,
         "product": product,
         "user_id": user_id
     })
 
 @router.get("/search", response_class=HTMLResponse)
 async def search_products(
-    request: Request,  # ← THIS WAS MISSING!
+    request: Request,
     q: str = Query(""),
     user_id: str = "demo_user_1",
     db: Session = Depends(get_db)
 ):
-    """Search products - TRACKS SEARCH BEHAVIOR"""
-    
-    # TRACK SEARCH BEHAVIOR
     if q.strip():
         behavior = UserBehaviorCreate(
             userid=user_id,
@@ -68,10 +62,25 @@ async def search_products(
     if q.strip():
         products = [p for p in products if 
                    q.lower() in p.name.lower() or 
-                   q.lower() in p.description.lower() if p.description]
+                   q.lower() in getattr(p, 'description', '').lower()]
     
     return templates.TemplateResponse("user/search.html", {
-        "request": request,  # ← THIS WAS MISSING!
+        "request": request,
         "products": products,
         "query": q
+    })
+
+# 🔥 THIS WAS MISSING - ALL PRODUCTS!
+@router.get("/products", response_class=HTMLResponse)
+async def all_products(
+    request: Request,
+    db: Session = Depends(get_db)
+):
+    """ALL PRODUCTS - Shows your admin products!"""
+    products = get_products(db)  # Same as home/search
+    
+    return templates.TemplateResponse("user/products.html", {
+        "request": request,
+        "products": products,
+        "title": "All Products"
     })
